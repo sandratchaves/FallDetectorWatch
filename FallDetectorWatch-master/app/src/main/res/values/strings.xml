@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Fall Detector</string>
+    <string name="title_activity_mail">MailActivity</string>
+    <string name="dialog_title">Cadastrar contato de emergência</string>
+    <string name="dialog_name_hint">Digite o nome&#8230;</string>
+    <string name="dialog_mail_hint">Digite o telefone&#8230;</string>
+    <string name="dialog_ok_text">Confirmar</string>
+    <string name="dialog_cancel_text">Cancelar</string>
+</resources>

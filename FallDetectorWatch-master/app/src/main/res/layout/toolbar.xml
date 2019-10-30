@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:titleTextColor="@android:color/white">
+
+
+    <ImageButton
+        android:id="@+id/toolbar_left_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/ic_arrow_back_white"
+        android:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+    <Button
+        android:id="@+id/toolbar_right_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="end"
+        android:textSize="12sp"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:textColor="#FFF"
+        android:layout_margin="5dp"
+        style="?android:attr/borderlessButtonStyle"/>
+</androidx.appcompat.widget.Toolbar>
