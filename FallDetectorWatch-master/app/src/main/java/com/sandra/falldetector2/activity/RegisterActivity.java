@@ -20,6 +20,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import android.telephony.SmsManager;
@@ -43,6 +44,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +63,8 @@ public class RegisterActivity extends AppCompatActivity implements MessageClient
     public static final String SMS_SENT = "SMS_SENT";
     private BroadcastReceiver sentStatusReceiver;
     private BroadcastReceiver deliveredStatusReceiver;
+
+    int index = 0;
 
     private static final String
             FALL_CAPABILITY_NAME = "fall_notification";
@@ -119,33 +123,44 @@ public class RegisterActivity extends AppCompatActivity implements MessageClient
                 }, error -> {
                 });
 
-
+        //sendSmsToAll();
     }
 
     //Méto para enviar uma SMS para todos o usuários do banco de dados
     private void sendSmsToAll(){
-
-        String username = PreferenceManager.getDefaultSharedPreferences(this).getString("username", null);
-        //Obtém a localização do usuário
-        Location location = App.getInstance().getLocation();
-        String message = "";
-        if (location != null)
-            message = "Queda de" + username + "em: https://www.google.com/maps/search/?api=1&query="+ location.getLatitude()+","+location.getLongitude();
-        else
-            message = "Alerta de" + username + ", que provavelmente sofreu uma queda.";
         Contact[] contacts = contactRepository.getAllContacts();
         if (contacts.length > 0){
             //Percorre todos os contatos e envia a SMS
-            for (Contact c:contacts){
-                if (c.isImportant()) {
-                    String number = c.getNumber().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
-                    String phone = "+55" + number;
-                    sendSMS(phone, message);
-                    Log.d("teste", "sendSmsToAll: " + phone);
+
+            String username = PreferenceManager.getDefaultSharedPreferences(this).getString("username", null);
+            Handler handler = new Handler();
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    if (index>=contacts.length){
+                        handler.removeCallbacks(this);
+                    } else {
+                        //Obtém a localização do usuário
+                        Location location = App.getInstance().getLocation();
+                        String message = "";
+                        if (location != null)
+                            message = "Queda de " + username + " em: https://www.google.com/maps/search/?api=1&query="+ location.getLatitude()+","+location.getLongitude() +" "+ UUID.randomUUID().toString();
+                        else
+                            message = "Alerta de " + username + ", que provavelmente sofreu uma queda. " +  UUID.randomUUID().toString();
+                        Contact c = contacts[index];
+                        String number = c.getNumber().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
+                        String phone = "+55" + number;
+                        sendSMS(phone, message);
+                        Log.d("teste", "sendSmsToAll: " + phone);
+                        index +=1;
+                        handler.postDelayed(this,2*1000);
+                    }
                 }
+            };
+            handler.post(run);
             }
         }
-    }
+
 
     //Método para enviar a SMS utilizando os recursos do SO Android
     private void sendSMS(String phoneNumber, String message) {
